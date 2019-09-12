@@ -1,18 +1,25 @@
 <%@ page import="java.sql.*"%>
 <html>
 <head>
-<title>JDBC Connection example</title>
+<title>JDBC 3-tier example</title>
 </head>
 <body>
-<h1>JDBC Connection example</h1>
+<h1>JDBC 3-tier example</h1>
 <%
-	String db = request.getParameter("cs157a"); //or root
-	String user = "root"; // assumes database name is the same as username
+	String user = "root";
+	String pwd = "root";
 	try {
 		java.sql.Connection con;
 		Class.forName("com.mysql.cj.jdbc.Driver");
-		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs157a", "root", "root");
-		out.println (db+ " database successfully opened.");
+		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs157a", user, pwd);
+		out.println ("Database successfully connected.<br><br>");
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("select * from team_members");
+		out.print("<h4>Team-01 Members:</h4>");
+		while(rs.next())
+			out.println(rs.getString(1) + " " + rs.getString(2) + "<br>");
+		
+		con.close();
 	}
 	catch(SQLException e) {
 		out.println("SQLException caught: " +e.getMessage());
